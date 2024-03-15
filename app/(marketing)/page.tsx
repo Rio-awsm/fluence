@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { Loader } from "lucide-react";
-import { 
-  ClerkLoaded, 
-  ClerkLoading, 
-  SignInButton, 
-  SignUpButton, 
-  SignedIn, 
-  SignedOut
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -48,14 +48,12 @@ export default function Home() {
             </SignedOut>
             <SignedIn>
               <Button size="lg" variant="secondary" className="w-full" asChild>
-                <Link href="/learn">
-                  Continue Learning
-                </Link>
+                <Link href="/learn">Continue Learning</Link>
               </Button>
             </SignedIn>
           </ClerkLoaded>
         </div>
       </div>
     </div>
-  )
+  );
 }
