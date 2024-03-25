@@ -38,9 +38,18 @@ export const Quiz = ({
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
 
+  const [selectedoption, setSelectedOption] = useState<number>();
+  const [status, setStatus] = useState<"correct" | "wrong" | "none">("none");
+
   const challenge = challenges[activeIndex];
 
   const options = challenge?.challengeOptions ?? [];
+
+  const onSelect = (id: number) => {
+    if (status != "none") return;
+
+    setSelectedOption(id);
+  };
 
   const title =
     challenge.type === "ASSIST"
@@ -64,13 +73,13 @@ export const Quiz = ({
               {challenge.type === "ASSIST" && (
                 <QuestionBubble question={challenge.question} />
               )}
-              <Challeneg 
-              options = {options}
-              onSelect={() => {}}
-              status = "correct"
-              selectedOption = {undefined}
-              disabled = {false}
-              type={challenge.type}
+              <Challeneg
+                options={options}
+                onSelect={onSelect}
+                status={status}
+                selectedOption={selectedoption}
+                disabled={false}
+                type={challenge.type}
               />
             </div>
           </div>
