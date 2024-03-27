@@ -15,6 +15,7 @@ import Image from "next/image";
 import { ResultCard } from "./result-card";
 import { useRouter } from "next/navigation";
 import { useHeartsModal } from "@/store/use-hearts-model";
+import { usePracticeModal } from "@/store/use-practice-modal";
 
 type Props = {
   initialPercentage: number;
@@ -38,7 +39,15 @@ export const Quiz = ({
   initialLessonChallenges,
   userSubscription,
 }: Props) => {
-  const {open: openHeartsModal} = useHeartsModal()
+  const { open: openHeartsModal } = useHeartsModal();
+
+  const { open: openPracticeModal } = usePracticeModal();
+
+  useMount(() => {
+    if (initialPercentage === 100) {
+      openPracticeModal();
+    }
+  });
 
   const { width, height } = useWindowSize();
   const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" });
@@ -51,7 +60,9 @@ export const Quiz = ({
 
   const [pending, startTransition] = useTransition();
   const [hearts, setHearts] = useState(initialHearts);
-  const [percentage, setPercentage] = useState(initialPercentage);
+  const [percentage, setPercentage] = useState(() => {
+    return initialPercentage === 100 ? 0 : initialPercentage;
+  });
   const [challenges] = useState(initialLessonChallenges);
   const [lessonId, setLessonId] = useState(initialLessonId);
   const [activeIndex, setActiveIndex] = useState(() => {
@@ -107,7 +118,7 @@ export const Quiz = ({
         upsertChallenegeProgress(challenge.id)
           .then((response) => {
             if (response?.error === "hearts") {
-              openHeartsModal()
+              openHeartsModal();
               return;
             }
 
