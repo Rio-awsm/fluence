@@ -8,6 +8,8 @@ import { Challeneg } from "./challenge";
 import { Footer } from "./footer";
 import { upsertChallenegeProgress } from "@/actions/challenge-progress";
 import { toast } from "sonner";
+import { reduceHearts } from "@/actions/user-progress";
+import { error } from "console";
 
 type Props = {
   initialPercentage: number;
@@ -103,7 +105,22 @@ export const Quiz = ({
           );
       });
     } else {
-      console.log("incorrect option");
+      startTransition(() => {
+        reduceHearts(challenge.id)
+        .then((response) => {
+          if(response?.error === "hearts") {
+            console.error("Missing Hearts");
+            return
+          }
+
+          setStatus("wrong");
+
+          if(!response?.error) {
+            setHearts((prev) => Math.max(prev - 1, 0))
+          }
+        })
+        .catch(() => toast.error("Something went wrong!! try again!!"))
+      })
     }
   };
 
@@ -134,14 +151,14 @@ export const Quiz = ({
                 onSelect={onSelect}
                 status={status}
                 selectedOption={selectedoption}
-                disabled={false}
+                disabled={pending}
                 type={challenge.type}
               />
             </div>
           </div>
         </div>
       </div>
-      <Footer disabled={!selectedoption} status={status} onCheck={onContinue} />
+      <Footer disabled={pending || !selectedoption} status={status} onCheck={onContinue} />
     </>
   );
 };
