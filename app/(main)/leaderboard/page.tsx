@@ -10,6 +10,8 @@ import Image from "next/image";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
+import { Promo } from "@/components/promo";
+import { Quests } from "@/components/quests";
 
 const LeaderBoardPage = async () => {
   const userProgressData = getUserProgress();
@@ -37,6 +39,10 @@ const LeaderBoardPage = async () => {
           points={userProgress.points}
           hasActiveSubscription={isPro}
         />
+        {!isPro && (
+          <Promo />
+        )}
+        <Quests points={userProgress.points}  />
       </StickyWrapper>
 
       <FeedWrapper>
