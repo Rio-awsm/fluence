@@ -7,6 +7,7 @@ import {
   getLessonPercentage,
   getUnits,
   getUserProgress,
+  getUserSubscription,
 } from "@/db/quaries";
 import { redirect } from "next/navigation";
 import { Unit } from "./unit";
@@ -15,14 +16,18 @@ const LearnPage = async () => {
   const userProgressData = getUserProgress();
   const lessonPercentageData = getLessonPercentage();
   const unitsData = getUnits();
+
+  const userSubscriptionData = getUserSubscription()
+
   const courseProgressdata = getCourseProgress();
 
-  const [userProgress, units, courseProgress, lessonPercentage] =
+  const [userProgress, units, courseProgress, lessonPercentage,UserSubscription] =
     await Promise.all([
       userProgressData,
       unitsData,
       courseProgressdata,
       lessonPercentageData,
+      userSubscriptionData
     ]);
 
   if (!userProgress || !userProgress.activeCourse) {
@@ -40,7 +45,7 @@ const LearnPage = async () => {
           activeCourse={userProgress.activeCourse}
           hearts={userProgress.hearts}
           points={userProgress.points}
-          hasActiveSubscription={false}
+          hasActiveSubscription={!!UserSubscription?.isActive}
         />
       </StickyWrapper>
       <FeedWrapper>

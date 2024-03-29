@@ -1,4 +1,4 @@
-import { getLesson, getUserProgress } from "@/db/quaries";
+import { getLesson, getUserProgress, getUserSubscription } from "@/db/quaries";
 import { redirect } from "next/navigation";
 import { Quiz } from "../quiz";
 
@@ -11,10 +11,12 @@ type Props = {
 const LessonIdPage = async ({ params }: Props) => {
   const lessonData = getLesson(params.lessonId);
   const userProgressData = getUserProgress();
+  const userSubscriptionData = getUserSubscription();
 
-  const [lesson, userProgress] = await Promise.all([
+  const [lesson, userProgress, UserSubscription] = await Promise.all([
     lessonData,
     userProgressData,
+    userSubscriptionData
   ]);
 
   if (!lesson || !userProgress) {
@@ -32,7 +34,7 @@ const LessonIdPage = async ({ params }: Props) => {
       initialLessonChallenges={lesson.challenges}
       initialHearts={userProgress.hearts}
       initialPercentage={initialPercentage}
-      userSubscription={null}
+      userSubscription={UserSubscription}
     />
   );
 };
